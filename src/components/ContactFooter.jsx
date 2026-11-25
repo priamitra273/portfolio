@@ -22,6 +22,10 @@ const QUICK_LINKS = [
 ];
 
 const REPOSITORY_LINKS = [
+  {
+    label: 'STUDENT MONITOR',
+    href: 'https://monitoring-nilai-siswa-5uns.vercel.app/login',
+  },
   { label: 'HYDROHERO API', href: 'https://github.com/priamitra273/HydroHeroAPI' },
   { label: 'E-WASTEPAS', href: 'https://github.com/priamitra273/ewastepas-backend' },
 ];

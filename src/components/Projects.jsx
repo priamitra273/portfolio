@@ -6,7 +6,7 @@ import {
   useReducedMotion,
   useSpring,
 } from 'motion/react';
-import { ArrowUpRight, GithubLogo, X } from '@phosphor-icons/react';
+import { ArrowUpRight, GithubLogo, Globe, X } from '@phosphor-icons/react';
 import {
   EDITORIAL_EASE,
   REVEAL_UP,
@@ -16,6 +16,10 @@ import {
 } from '../lib/motion.js';
 
 const CATEGORY_DEFAULT_COVERS = {
+  'Full-Stack': {
+    src: '/category-fullstack.webp',
+    alt: 'Full-Stack category cover with layered smoked-glass plates above a milled dark aluminum base',
+  },
   'Cloud & API': {
     src: '/category-cloud-api.webp',
     alt: 'Cloud and API category cover with matte black heatsink fins, network patch cables, and frosted emerald prism',
@@ -24,19 +28,41 @@ const CATEGORY_DEFAULT_COVERS = {
     src: '/category-backend-orm.webp',
     alt: 'Backend and ORM category cover with interlocking matte basalt and brushed dark steel modular blocks',
   },
-  'Full-Stack': {
-    src: '/category-fullstack.webp',
-    alt: 'Full-Stack category cover with layered smoked-glass plates above a milled dark aluminum base',
-  },
 };
 
 const PROJECTS = [
   {
     id: '01',
     featured: true,
+    category: 'Full-Stack',
+    title: 'Student Grade & Progress Monitoring System',
+    repoSlug: 'priamitra273/monitoring-nilai-siswa',
+    demoUrl: 'https://monitoring-nilai-siswa-5uns.vercel.app/login',
+    githubUrl: 'https://github.com/priamitra273/monitoring-nilai-siswa',
+    imageUrl: '/project-monitoring-nilai.webp',
+    summary:
+      'Full-stack school academic monitoring web app built for SDN 1 Langensari to manage student grades, attendance, developmental notes, and parent-teacher communication across Admin, Teacher, and Parent roles.',
+    stack: [
+      'React',
+      'Vite',
+      'Node.js',
+      'Express.js',
+      'MySQL / TiDB',
+      'JWT',
+      'Docker',
+    ],
+    year: '2025',
+    role: 'Full-Stack Developer',
+    details:
+      'Includes role-based portals (Admin, Teacher, Parent) with instant synthetic-data demo login deployed on Vercel and TiDB Cloud, JWT + bcrypt authentication, parent-teacher chat, academic transcripts, and Chromium-based PDF report generation.',
+  },
+  {
+    id: '02',
+    featured: false,
     category: 'Cloud & API',
     title: 'HydroHeroAPI (Bangkit Capstone Backend)',
     repoSlug: 'priamitra273/HydroHeroAPI',
+    demoUrl: '',
     githubUrl: 'https://github.com/priamitra273/HydroHeroAPI',
     imageUrl: '',
     summary:
@@ -48,11 +74,12 @@ const PROJECTS = [
       'Developed as the backend core for a cross-disciplinary Bangkit Capstone team, exposing authenticated hydration endpoints and combining user activity with real-time local temperature data from IPStack and OpenWeather.',
   },
   {
-    id: '02',
+    id: '03',
     featured: false,
     category: 'Backend & ORM',
     title: 'E-Wastepas Backend',
     repoSlug: 'priamitra273/ewastepas-backend',
+    demoUrl: '',
     githubUrl: 'https://github.com/priamitra273/ewastepas-backend',
     imageUrl: '',
     summary:
@@ -65,7 +92,7 @@ const PROJECTS = [
   },
 ];
 
-const FILTERS = ['All', 'Cloud & API', 'Backend & ORM', 'Live Demo'];
+const FILTERS = ['All', 'Full-Stack', 'Cloud & API', 'Backend & ORM', 'Live Demo', 'Mobile'];
 
 function getProjectCover(project) {
   const fallback =
@@ -105,7 +132,7 @@ function ProjectCoverPlate({ project, compact = false }) {
             {project.repoSlug}
           </span>
           <span className="shrink-0 font-mono text-[0.7rem] text-accent uppercase">
-            {project.category}
+            {project.demoUrl ? `${project.category} · LIVE` : project.category}
           </span>
         </div>
       )}
@@ -174,22 +201,24 @@ function FlagshipShowcase({ project, onInspect }) {
               ))}
             </ul>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.97 }}
-                transition={SPRING_TACTILE}
-                onClick={(e) => onInspect(project, e)}
-                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-accent pl-5 pr-2 text-[0.875rem] font-semibold text-accent-fg spring-transition hover:bg-accent-hover"
-              >
-                <span>Inspect Case Brief</span>
-                <span
-                  aria-hidden="true"
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-fg/15 text-accent-fg spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            <div className="flex flex-wrap items-center gap-2.5">
+              {project.demoUrl && (
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-accent pl-5 pr-2 text-[0.875rem] font-semibold text-accent-fg spring-transition hover:bg-accent-hover"
                 >
-                  <ArrowUpRight size={15} weight="light" />
-                </span>
-              </motion.button>
+                  <Globe size={16} weight="regular" aria-hidden="true" />
+                  <span>Live Demo</span>
+                  <span
+                    aria-hidden="true"
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-fg/15 text-accent-fg spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  >
+                    <ArrowUpRight size={15} weight="light" />
+                  </span>
+                </a>
+              )}
 
               <a
                 href={project.githubUrl}
@@ -198,9 +227,19 @@ function FlagshipShowcase({ project, onInspect }) {
                 className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-stage-ink/35 bg-stage-ink/10 px-4 py-2 text-[0.875rem] font-medium text-stage-ink spring-transition hover:border-accent hover:text-accent"
               >
                 <GithubLogo size={16} weight="regular" aria-hidden="true" />
-                <span>GitHub Repo</span>
+                <span>Source Code</span>
                 <ArrowUpRight size={14} weight="light" aria-hidden="true" />
               </a>
+
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                transition={SPRING_TACTILE}
+                onClick={(e) => onInspect(project, e)}
+                className="inline-flex min-h-[44px] items-center rounded-full border border-stage-ink/35 px-4 py-2 text-[0.875rem] font-medium text-stage-ink spring-transition hover:border-accent hover:text-accent"
+              >
+                Case Brief
+              </motion.button>
             </div>
           </div>
         </div>
@@ -261,7 +300,7 @@ export default function Projects() {
     activeFilter === 'All'
       ? PROJECTS
       : activeFilter === 'Live Demo'
-      ? []
+      ? PROJECTS.filter((p) => Boolean(p.demoUrl))
       : PROJECTS.filter((p) => p.category === activeFilter);
 
   const flagshipProject = filteredProjects.find((p) => p.featured) ?? null;
@@ -378,7 +417,7 @@ export default function Projects() {
               <div>
                 <div className="mb-4 flex items-center justify-between">
                   <p className="font-mono text-[0.75rem] tracking-[0.04em] text-ink-secondary">
-                    ADDITIONAL REPOSITORY
+                    ADDITIONAL REPOSITORIES
                   </p>
                   <p className="font-mono text-[0.75rem] text-ink-secondary">
                     {archiveProjects.length}{' '}
@@ -447,6 +486,18 @@ export default function Projects() {
                             Case Brief
                           </motion.button>
 
+                          {project.demoUrl && (
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-border-strong bg-plate px-3.5 text-[0.8125rem] font-medium text-ink-primary spring-transition hover:border-accent hover:text-accent"
+                            >
+                              <span>Live Demo</span>
+                              <ArrowUpRight size={14} weight="light" aria-hidden="true" />
+                            </a>
+                          )}
+
                           <a
                             href={project.githubUrl}
                             target="_blank"
@@ -484,12 +535,12 @@ export default function Projects() {
                 EMPTY STATE · {activeFilter.toUpperCase()}
               </p>
               <h3 className="font-serif text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.2] text-ink-primary">
-                No hosted live demos published yet.
+                No standalone {activeFilter.toLowerCase()} repositories listed yet.
               </h3>
               <p className="max-w-[52ch] text-[0.9375rem] leading-[1.65] text-ink-secondary">
-                Both featured builds currently publish their full source code on
-                GitHub rather than public demo servers. Reset the filter to
-                inspect the repositories.
+                My current public work focuses on full-stack web applications,
+                cloud services, and REST API backends. Reset the filter to view
+                all published builds.
               </p>
               <motion.button
                 type="button"
@@ -563,17 +614,36 @@ export default function Projects() {
                   {selectedProject.details}
                 </p>
 
-                <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border-subtle pt-5">
-                  <a
-                    href={selectedProject.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent px-5 py-2 text-[0.875rem] font-semibold text-accent-fg spring-transition hover:bg-accent-hover"
-                  >
-                    <GithubLogo size={16} weight="regular" aria-hidden="true" />
-                    <span>Open GitHub Repository</span>
-                    <ArrowUpRight size={15} weight="light" aria-hidden="true" />
-                  </a>
+                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border-subtle pt-5">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {selectedProject.demoUrl && (
+                      <a
+                        href={selectedProject.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent px-5 py-2 text-[0.875rem] font-semibold text-accent-fg spring-transition hover:bg-accent-hover"
+                      >
+                        <Globe size={16} weight="regular" aria-hidden="true" />
+                        <span>Open Live Demo</span>
+                        <ArrowUpRight size={15} weight="light" aria-hidden="true" />
+                      </a>
+                    )}
+
+                    <a
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex min-h-[44px] items-center gap-2 rounded-full px-5 py-2 text-[0.875rem] spring-transition ${
+                        selectedProject.demoUrl
+                          ? 'border border-border-strong bg-canvas font-medium text-ink-primary hover:border-accent hover:text-accent'
+                          : 'bg-accent font-semibold text-accent-fg hover:bg-accent-hover'
+                      }`}
+                    >
+                      <GithubLogo size={16} weight="regular" aria-hidden="true" />
+                      <span>Source Code</span>
+                      <ArrowUpRight size={15} weight="light" aria-hidden="true" />
+                    </a>
+                  </div>
 
                   <motion.button
                     type="button"
